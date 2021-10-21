@@ -3,14 +3,17 @@ package br.com.kleber.clinicaapi.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.kleber.clinicaapi.model.Cliente;
+import br.com.kleber.clinicaapi.repository.DadosRepository;
 
 
 
@@ -23,50 +26,21 @@ import br.com.kleber.clinicaapi.model.Cliente;
  * de fluxo que receberá comandos em Rest e responderá dados no formato Rest.
  * 
  */
-
-
-
 @RestController
 @RequestMapping("/")
-public class Dados {
+public class Dados{
 	
-	@GetMapping
-	public String inicial() {
-		return "Olá, você está na pagina inicial do projeto.";
-	}
-
-	@GetMapping("/cliente")
-	public String cliente() {
-		return "Henrique Felix";
-	}
+	@Autowired
+	private DadosRepository dr;
 	
-	@GetMapping("/clientes")
-	public List<Cliente> clientes() {
-		List<Cliente> lst = new ArrayList<Cliente>();
-		Cliente c1 = new Cliente();
-		Cliente c2 = new Cliente();
-		
-		c1.setNome("Kleber");
-		c2.setNome("Henrique");
-		
-		lst.add(c1);
-		lst.add(c2);
-		
-		return lst;
+	@PostMapping("/cad")
+	public String cadastro(@RequestBody Cliente cliente) {
+		dr.save(cliente);
+		return "Cliente cadastrado com sucesso!";
 	}
 	
-	@PostMapping("/cadastro")
-	public String cadastro() {	
-		return "Cadastro realizado";
+	public List<Cliente> clientes(){
+		return dr.findAll();
 	}
 	
-	@PutMapping("/atualizar")
-	public String atualizar() {
-		return "Dados atualizado!";
-	}
-	
-	@DeleteMapping("/deletar")
-	public String deletar() {
-		return "Dados deletados";
-	}
 }
